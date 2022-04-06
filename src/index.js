@@ -8,10 +8,7 @@ const searchButton = document.querySelector('button[type="submit"]');
 
 const galleryPlace = document.querySelector('div.gallery');
 
-const inputValue = pageInput.value;
-const joinedInputValue = inputValue.split(' ').join('+');
-
-async function searchPictures() {
+async function searchPictures(joinedInputValue) {
   try {
     const response = await axios.get(
       `https://pixabay.com/api/?key=26513861-7ba7a860ef1b492cf85cf7d68&q=${joinedInputValue}&image_type=photo&orientation=horizontal&safesearch=true`,
@@ -28,7 +25,7 @@ function createGalleryTags(backendObjects) {
     .map(
       backendObj =>
         `<div class="photo-card">
-          <img src="${backendObj.pageURL}" alt="${backendObj.tags}" loading="lazy" />
+          <img class="gallery__image" src="${backendObj.webformatURL}" alt="${backendObj.tags}" loading="lazy" />
           <div class="info">
             <p class="info-item">
               <b>Likes</b>${backendObj.likes}
@@ -52,11 +49,17 @@ function createGalleryTags(backendObjects) {
 
 const galleryGenerator = event => {
   event.preventDefault();
-  searchPictures()
+  //console.log(joinedInputValue);
+  //console.log(inputValue);
+  //console.log(pageInput.value);
+  const inputValue = pageInput.value;
+  const joinedInputValue = inputValue.split(' ').join('+');
+  searchPictures(joinedInputValue)
     .then(response => {
       createGalleryTags(response.data.hits);
-      console.log(response.data.hits);
-      console.log(response.data.hits[0].pageURL);
+      //console.log(joinedInputValue);
+      //console.log(response.data.hits);
+      //console.log(response.data.hits[0].pageURL);
     })
     .catch(error => {
       console.log(error);
