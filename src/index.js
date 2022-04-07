@@ -6,6 +6,7 @@ const axios = require('axios').default;
 const pageForm = document.querySelector('form.search-form');
 const pageInput = document.querySelector('input[name="searchQuery"]');
 const searchButton = document.querySelector('button[type="submit"]');
+const loadMoreButton = document.querySelector('button.load-more');
 
 const galleryPlace = document.querySelector('div.gallery');
 
@@ -47,9 +48,23 @@ function createGalleryTags(backendObjects) {
   galleryPlace.innerHTML = markup;
 }
 
+const hideLoadButton = () => {
+  if (loadMoreButton.classList.contains('load-more--visible')) {
+    loadMoreButton.classList.replace('load-more--visible', 'load-more--hidden');
+  }
+};
+
+const showLoadButton = () => {
+  if (loadMoreButton.classList.contains('load-more--hidden')) {
+    loadMoreButton.classList.replace('load-more--hidden', 'load-more--visible');
+  }
+};
 
 const galleryGenerator = event => {
   event.preventDefault();
+
+  hideLoadButton();
+
   const inputValue = pageInput.value;
   const joinedInputValue = inputValue.split(' ').join('+');
   searchPictures(joinedInputValue)
@@ -58,8 +73,10 @@ const galleryGenerator = event => {
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.',
         );
+        galleryPlace.innerHTML = '';
       } else {
         createGalleryTags(response.data.hits);
+        showLoadButton();
       };
     })
     .catch(error => {

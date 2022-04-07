@@ -70,3 +70,51 @@ display: flex;
 flex-direction: column;
 align-items: center;
 }
+
+.load-more {
+  background: #333ac1;
+  border-radius: 11px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-size: 15p;
+  font-weight: 500;
+  justify-content: center;
+  line-height: 33.4929px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  text-decoration-skip-ink: auto;
+  text-shadow: rgba(0, 0, 0, .3) 1px 1px 1px;
+  text-underline-offset: 1px;
+  transition: all .2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 150px;
+  word-break: break-word;
+  border: 0;
+  margin: 90px auto;
+}
+
+.load-more:active,
+.load-more:focus {
+  border-bottom-style: none;
+  border-color: #dadada;
+  box-shadow: rgba(0, 0, 0, .3) 0 3px 3px inset;
+  outline: 0;
+}
+
+.load-more:hover {
+  border-bottom-style: none;
+  border-color: #dadada;
+}
+
+.load-more--visible{
+  visibility: visible;
+}
+
+.load-more--hidden{
+  visibility: hidden;
+}
