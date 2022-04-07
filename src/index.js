@@ -1,4 +1,5 @@
 import './css/styles.css';
+import Notiflix from 'notiflix';
 
 const axios = require('axios').default;
 
@@ -49,17 +50,17 @@ function createGalleryTags(backendObjects) {
 
 const galleryGenerator = event => {
   event.preventDefault();
-  //console.log(joinedInputValue);
-  //console.log(inputValue);
-  //console.log(pageInput.value);
   const inputValue = pageInput.value;
   const joinedInputValue = inputValue.split(' ').join('+');
   searchPictures(joinedInputValue)
     .then(response => {
-      createGalleryTags(response.data.hits);
-      //console.log(joinedInputValue);
-      //console.log(response.data.hits);
-      //console.log(response.data.hits[0].pageURL);
+      if (response.data.hits.length === 0) {
+        Notiflix.Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.',
+        );
+      } else {
+        createGalleryTags(response.data.hits);
+      };
     })
     .catch(error => {
       console.log(error);
