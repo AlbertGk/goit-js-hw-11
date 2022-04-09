@@ -75,19 +75,19 @@ const showLoadButton = () => {
 
 const galleryGenerator = event => {
   event.preventDefault();
-
   hideLoadButton();
+  galleryPlace.innerHTML = '';
   page = 1;
 
   inputValue = pageInput.value;
   joinedInputValue = inputValue.split(' ').join('+');
+  
   searchPictures(joinedInputValue)
     .then(response => {
       if (response.data.hits.length === 0) {
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.',
         );
-        galleryPlace.innerHTML = '';
       } else {
         createGalleryTags(response.data.hits);
         showLoadButton();
