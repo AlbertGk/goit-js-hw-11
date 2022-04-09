@@ -11,6 +11,7 @@ const loadMoreButton = document.querySelector('button.load-more');
 const galleryPlace = document.querySelector('div.gallery');
 
 let page = 1;
+let perPage = 40;
 
 let inputValue;
 let joinedInputValue;
@@ -21,7 +22,7 @@ async function searchPictures(joinedInputValue) {
     orientation: 'horizontal',
     safesearch: true,
     page: page,
-    per_page: 40,
+    per_page: perPage,
   });
 
   try {
@@ -105,14 +106,13 @@ const moreGalleryGenerator = event => {
   page += 1;
   searchPictures(joinedInputValue)
     .then(response => {
-      if (page * 40 >= response.data.totalHits) {
+      if (page * perPage >= response.data.totalHits) {
         hideLoadButton();
 
-        Notiflix.Notify.failure(
-          "We're sorry, but you've reached the end of search results.",
-        );
-      }
-      else { createGalleryTags(response.data.hits) };
+        Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
+      } else {
+        createGalleryTags(response.data.hits);
+      };
     })
 };
 
