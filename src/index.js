@@ -3,17 +3,30 @@ import Notiflix from 'notiflix';
 
 const axios = require('axios').default;
 
-const pageForm = document.querySelector('form.search-form');
+//const pageForm = document.querySelector('form.search-form');
 const pageInput = document.querySelector('input[name="searchQuery"]');
 const searchButton = document.querySelector('button[type="submit"]');
 const loadMoreButton = document.querySelector('button.load-more');
 
 const galleryPlace = document.querySelector('div.gallery');
 
+let page = 1;
+
+let inputValue;
+let joinedInputValue;
+
 async function searchPictures(joinedInputValue) {
+  const params = new URLSearchParams({
+    image_type: 'photo',
+    orientation: 'horizontal',
+    safesearch: true,
+    page: page,
+    per_page: 40,
+  });
+
   try {
     const response = await axios.get(
-      `https://pixabay.com/api/?key=26513861-7ba7a860ef1b492cf85cf7d68&q=${joinedInputValue}&image_type=photo&orientation=horizontal&safesearch=true`,
+      `https://pixabay.com/api/?key=26513861-7ba7a860ef1b492cf85cf7d68&q=${joinedInputValue}&${params}`,
     );
     return response;
   } catch (error) {
@@ -45,7 +58,7 @@ function createGalleryTags(backendObjects) {
         </div>`,
     )
     .join('');
-  galleryPlace.innerHTML = markup;
+  galleryPlace.insertAdjacentHTML("beforeend", markup);
 }
 
 const hideLoadButton = () => {
@@ -64,9 +77,10 @@ const galleryGenerator = event => {
   event.preventDefault();
 
   hideLoadButton();
+  page = 1;
 
-  const inputValue = pageInput.value;
-  const joinedInputValue = inputValue.split(' ').join('+');
+  inputValue = pageInput.value;
+  joinedInputValue = inputValue.split(' ').join('+');
   searchPictures(joinedInputValue)
     .then(response => {
       if (response.data.hits.length === 0) {
@@ -85,3 +99,21 @@ const galleryGenerator = event => {
 };
 
 searchButton.addEventListener('click', galleryGenerator);
+
+const moreGalleryGenerator = event => {
+  event.preventDefault();
+  page += 1;
+  searchPictures(joinedInputValue)
+    .then(response => {
+      if (page * 40 >= response.data.totalHits) {
+        hideLoadButton();
+
+        Notiflix.Notify.failure(
+          "We're sorry, but you've reached the end of search results.",
+        );
+      }
+      else { createGalleryTags(response.data.hits) };
+    })
+};
+
+loadMoreButton.addEventListener('click', moreGalleryGenerator);
